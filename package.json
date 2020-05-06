@@ -1,0 +1,24 @@
+{
+  "name": "joomla-3.x-images-lazy-loading",
+  "version": "1.0.0-alpha",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clone:joomla": "node_modules/.bin/degit github:joomla/joomla-cms joomla"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ttc-freebies/joomla-3.x-images-lazy-loading.git"
+  },
+  "author": "Dimitris Grammatikogiannis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ttc-freebies/joomla-3.x-images-lazy-loading/issues"
+  },
+  "homepage": "https://github.com/ttc-freebies/joomla-3.x-images-lazy-loading#readme",
+  "dependencies": {
+    "adm-zip": "^0.4.14",
+    "fs-extra": "^9.0.0",
+    "rimraf": "^3.0.2"
+  }
+}
