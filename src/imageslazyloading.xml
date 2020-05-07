@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.9" type="plugin" group="system" method="upgrade">
+  <name>Images loading=lazy</name>
+  <author>Dimitrios Grammatikogiannis</author>
+  <creationDate>2020</creationDate>
+  <copyright>Copyright (C) 2020 Dimitrios Grammatikogiannis. All rights reserved.</copyright>
+  <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+  <authorEmail>d.grammatiko@gmail.com</authorEmail>
+  <authorUrl>https://dgrammatiko.online</authorUrl>
+  <version>{{version}}</version>
+  <description>Backports images lazyloding for Joomla 3.x</description>
+  <scriptfile>script.php</scriptfile>
+  <files>
+    <filename plugin="imageslazyloading">imageslazyloading.php</filename>
+    <folder>overrides</folder>
+  </files>
+</extension>
