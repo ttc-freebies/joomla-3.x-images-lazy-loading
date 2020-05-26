@@ -8,23 +8,50 @@
  */
 
 defined('JPATH_BASE') or die;
+
 $params = $displayData->params;
-?>
-<?php $images = json_decode($displayData->images); ?>
-<?php if (!empty($images->image_intro)) : ?>
-	<?php $imgfloat = empty($images->float_intro) ? $params->get('float_intro') : $images->float_intro; ?>
-	<div class="pull-<?php echo htmlspecialchars($imgfloat, ENT_COMPAT, 'UTF-8'); ?> item-image">
-	<?php if ($params->get('link_titles') && $params->get('access-view')) : ?>
-		<a href="<?php echo JRoute::_(ContentHelperRoute::getArticleRoute($displayData->slug, $displayData->catid, $displayData->language)); ?>"><img
-		<?php if ($images->image_intro_caption) : ?>
-			<?php echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_intro_caption) . '"'; ?>
-		<?php endif; ?>
-		src="<?php echo htmlspecialchars($images->image_intro, ENT_COMPAT, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($images->image_intro_alt, ENT_COMPAT, 'UTF-8'); ?>" itemprop="thumbnailUrl"/></a>
-	<?php else : ?><img
-		<?php if ($images->image_intro_caption) : ?>
-			<?php echo 'class="caption"' . ' title="' . htmlspecialchars($images->image_intro_caption, ENT_COMPAT, 'UTF-8') . '"'; ?>
-		<?php endif; ?>
-		src="<?php echo htmlspecialchars($images->image_intro, ENT_COMPAT, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($images->image_intro_alt, ENT_COMPAT, 'UTF-8'); ?>" itemprop="thumbnailUrl"/>
-	<?php endif; ?>
-	</div>
-<?php endif; ?>
+$images = json_decode($displayData->images);
+
+if (empty($images->image_intro)) {
+	return;
+}
+
+$imgfloat = empty($images->float_intro) ? $params->get('float_intro') : $images->float_intro;
+$attr     = array(
+	'loading'  => 'lazy',
+	'src'      => $images->image_intro,
+	'alt'      => $images->image_intro_alt,
+	'itemprop' => 'image',
+);
+
+if ($images->image_intro_caption) {
+	$attr['class'] = 'caption';
+	$attr['title'] = $images->image_intro_caption;
+}
+
+$image = '<img '
+. implode(
+	' ',
+	array_map(
+		function ($k, $v) { return $k .'="'. htmlspecialchars($v, ENT_COMPAT, 'UTF-8') .'"'; },
+		array_keys($attr), $attr
+	)
+)
+. ' />';
+
+if (JPluginHelper::isEnabled('content', 'responsive')) {
+	JLoader::register('Ttc\Freebies\Responsive\Helper', JPATH_ROOT . '/plugins/content/responsive/helper.php', true);
+	$helper = new \Ttc\Freebies\Responsive\Helper;
+	$image = $helper->transformImage($image, array(200, 320, 480, 768, 992, 1200, 1600, 1920));
+}
+
+echo '<div class="pull-' . htmlspecialchars($imgfloat) . ' item-image">';
+if ($params->get('link_titles') && $params->get('access-view')) {
+	echo '<a href="' . JRoute::_(ContentHelperRoute::getArticleRoute($displayData->slug, $displayData->catid, $displayData->language)) . '">';
+	echo $image;
+	echo '</a>';
+} else {
+	echo $image;
+}
+
+echo '</div>';
