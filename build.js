@@ -1,4 +1,4 @@
-const { copy, exists, mkdir, readFile, writeFile } = require('fs-extra');
+const { copy, exists, mkdir, readFile, writeFile } = require('fs-extra').promises;
 const util = require('util');
 const rimRaf = util.promisify(require('rimraf'));
 const { version } = require('./package.json');

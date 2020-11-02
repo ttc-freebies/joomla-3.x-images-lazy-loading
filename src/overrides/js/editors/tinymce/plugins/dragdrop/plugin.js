@@ -10,7 +10,7 @@ tinymce.PluginManager.add('jdragdrop', function(editor) {
 	});
 
 	// The upload logic
-	function UploadFile(file) {
+	function UploadFile(file, width, height) {
 		debugger;
 		var fd = new FormData();
 		fd.append('Filedata', file);
@@ -49,6 +49,8 @@ tinymce.PluginManager.add('jdragdrop', function(editor) {
 					var newNode = tinyMCE.activeEditor.getDoc().createElement ('img');
 					newNode.src= tinyMCE.activeEditor.settings.setCustomDir + resp.location;
 					newNode.setAttribute('loading', 'lazy');
+					newNode.setAttribute('width', width);
+					newNode.setAttribute('height', height);
 					tinyMCE.activeEditor.execCommand('mceInsertContent', false, newNode.outerHTML);
 				}
 			} else {
@@ -90,7 +92,7 @@ tinymce.PluginManager.add('jdragdrop', function(editor) {
 
 			// We override only for files
 			if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-				for (var i = 0, f; f = e.dataTransfer.files[i]; i++) {
+					f = e.dataTransfer.files[0];
 
 					// Only images allowed
 					if (f.name.toLowerCase().match(/\.(jpg|jpeg|png|gif)$/)) {
@@ -113,13 +115,19 @@ tinymce.PluginManager.add('jdragdrop', function(editor) {
 						container.appendChild(innerDiv);
 						document.querySelector('.mce-toolbar-grp').appendChild(container);
 
-						// Upload the file(s)
-						UploadFile(f);
+						var img = document.createElement('img');
+						var blob = URL.createObjectURL(f);
+						img.src = blob;
+
+						img.onload = function () {
+							// Upload the file(s)
+							UploadFile(f, img.width, img.heighth);
+						}
 					}
 
 					e.preventDefault();
 				}
-			}
+
 			editor.contentAreaContainer.style.borderWidth = '1px 0 0';
 		});
 	} else {
